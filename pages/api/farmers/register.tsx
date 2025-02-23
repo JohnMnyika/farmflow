@@ -1,9 +1,10 @@
-// pages/api/farmers/register.js
+// pages/api/farmers/register.tsx
 import Farmer from '../../../models/Farmer';
 import bcrypt from 'bcryptjs';
 import dbConnect from '../../../utils/dbConnect';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     await dbConnect();
 
     if (req.method === 'POST') {
@@ -30,7 +31,7 @@ export default async function handler(req, res) {
             });
 
             await farmer.save();
-            res.status(201).json({ message: 'Farmer registered successfully' });
+            res.status(201).json({ message: 'Farmer registered successfully', redirect: '/farmers/dashboard' });
         } catch (error) {
             res.status(500).json({ message: 'Something went wrong. Please try again.' });
         }

@@ -1,18 +1,25 @@
-// context/AuthContext.js
-import { createContext, useContext, useEffect, useState } from 'react';
+// context/AuthContext.tsx
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { useRouter } from 'next/router';
 import { getCookie } from 'cookies-next';
 
-const AuthContext = createContext();
+type AuthContextType = {
+    user: { token: string } | null;
+    setUser: (user: { token: string } | null) => void;
+};
 
-export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+const AuthContext = createContext<AuthContextType>({
+    user: null,
+    setUser: () => {},
+});
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+    const [user, setUser] = useState<{ token: string } | null>(null);
     const router = useRouter();
 
     useEffect(() => {
         const token = getCookie('token');
         if (token) {
-            // Fetch user data using the token (you can expand this later)
             setUser({ token });
         }
     }, []);

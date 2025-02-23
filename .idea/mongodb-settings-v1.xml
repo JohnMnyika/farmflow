@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MongoDBSettings">
+    <option name="serverConnections">
+      <set>
+        <ServerConnectionSetting>
+          <option name="additionalOptions">
+            <map>
+              <entry key="appName" value="Cluster0" />
+              <entry key="retryWrites" value="true" />
+              <entry key="w" value="majority" />
+            </map>
+          </option>
+          <option name="authenticationMethod" value="USER_PASSWORD" />
+          <option name="credential">
+            <Credential>
+              <option name="authMechanismProperties">
+                <map />
+              </option>
+              <option name="authSource" value="admin" />
+              <option name="authenticationMechanism" value="SCRAM-SHA-1" />
+            </Credential>
+          </option>
+          <option name="name" value="farmflow" />
+          <option name="replicaSetName" value="atlas-tjatsp-shard-0" />
+          <option name="serverUrls">
+            <list>
+              <option value="cluster0.xtydl.mongodb.net" />
+            </list>
+          </option>
+          <option name="sshTunnelingConfiguration">
+            <SshTunnelingConfiguration />
+          </option>
+          <option name="tlsSslConnection" value="ON" />
+          <option name="typeConnect" value="DNS_SEEDLIST" />
+          <option name="uuid" value="af527a8e-b90a-4b1e-9ce8-f1ad44a3c040" />
+        </ServerConnectionSetting>
+      </set>
+    </option>
+  </component>
+</project>

@@ -1,6 +1,7 @@
-// models/Farmer.js
+// models/Farmer.tsx
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 const farmerSchema = new mongoose.Schema({
     name: String,
@@ -18,5 +19,13 @@ farmerSchema.pre('save', async function (next) {
     }
     next();
 });
+
+// Generate JWT token
+farmerSchema.methods.generateAuthToken = function () {
+    const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET!, {
+        expiresIn: '1h', // Token expires in 1 hour
+    });
+    return token;
+};
 
 export default mongoose.models.Farmer || mongoose.model('Farmer', farmerSchema);

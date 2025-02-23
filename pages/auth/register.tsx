@@ -1,4 +1,4 @@
-// pages/auth/register.js
+// pages/auth/register.tsx
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -23,11 +23,11 @@ export default function Register() {
         phone: '',
         password: '',
     });
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [apiError, setApiError] = useState('');
     const router = useRouter();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             // Validate form data
@@ -36,12 +36,12 @@ export default function Register() {
             // Submit form data
             const response = await axios.post('/api/farmers/register', formData);
             if (response.status === 201) {
-                router.push('/buyers/dashboard');
+                router.push(response.data.redirect || '/farmers/dashboard'); // Redirect to the farmer dashboard
             }
         } catch (error) {
             if (error.name === 'ValidationError') {
                 // Set validation errors
-                const errors = {};
+                const errors: { [key: string]: string } = {};
                 error.inner.forEach((err) => {
                     errors[err.path] = err.message;
                 });
@@ -58,14 +58,12 @@ export default function Register() {
                 <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
                     Register as a Farmer
                 </h2>
-                <p className="mt-2 text-center text-sm text-gray-600">
-                    Join FarmFlow to connect directly with buyers and grow your business.
-                </p>
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
                     <form className="space-y-6" onSubmit={handleSubmit}>
+                        {/* Name Field */}
                         <div>
                             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                                 Full Name
@@ -83,6 +81,7 @@ export default function Register() {
                             </div>
                         </div>
 
+                        {/* Location Field */}
                         <div>
                             <label htmlFor="location" className="block text-sm font-medium text-gray-700">
                                 Location
@@ -100,6 +99,7 @@ export default function Register() {
                             </div>
                         </div>
 
+                        {/* Produce Field */}
                         <div>
                             <label htmlFor="produce" className="block text-sm font-medium text-gray-700">
                                 Produce
@@ -117,6 +117,7 @@ export default function Register() {
                             </div>
                         </div>
 
+                        {/* Farming Practices Field */}
                         <div>
                             <label htmlFor="farmingPractices" className="block text-sm font-medium text-gray-700">
                                 Farming Practices
@@ -136,6 +137,7 @@ export default function Register() {
                             </div>
                         </div>
 
+                        {/* Phone Field */}
                         <div>
                             <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
                                 Phone Number
@@ -153,6 +155,7 @@ export default function Register() {
                             </div>
                         </div>
 
+                        {/* Password Field */}
                         <div>
                             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                                 Password

@@ -1,4 +1,4 @@
-// components/Navbar.js
+// components/Navbar.tsx
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
 import { deleteCookie } from 'cookies-next';
