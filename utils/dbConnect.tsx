@@ -7,18 +7,7 @@ if (!MONGODB_URI) {
     throw new Error('Please define the MONGODB_URI environment variable');
 }
 
-// Extend the global object to include mongoose
-declare global {
-    namespace NodeJS {
-        interface Global {
-            mongoose: {
-                conn: Mongoose | null;
-                promise: Promise<Mongoose> | null;
-            };
-        }
-    }
-}
-
+// Use the global mongoose property as defined in global.d.ts
 let cached = global.mongoose;
 
 if (!cached) {
@@ -31,7 +20,9 @@ async function dbConnect(): Promise<Mongoose> {
     }
 
     if (!cached.promise) {
-        cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => {
+        // Ensure MONGODB_URI is a string
+        const uri = MONGODB_URI as string; // Type assertion
+        cached.promise = mongoose.connect(uri).then((mongoose) => {
             return mongoose;
         });
     }
