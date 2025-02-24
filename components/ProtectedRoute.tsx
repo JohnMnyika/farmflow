@@ -1,9 +1,13 @@
 // components/ProtectedRoute.tsx
 import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, ReactNode } from 'react';
 
-export default function ProtectedRoute({ children }) {
+interface ProtectedRouteProps {
+    children: ReactNode;
+}
+
+export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     const { user } = useAuth();
     const router = useRouter();
 
@@ -11,7 +15,7 @@ export default function ProtectedRoute({ children }) {
         if (!user) {
             router.push('/auth/login');
         }
-    }, [user]);
+    }, [user, router]); // Add `router` to the dependency array
 
     return user ? children : null;
 }

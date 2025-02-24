@@ -18,10 +18,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const router = useRouter();
 
     useEffect(() => {
-        const token = getCookie('token');
-        if (token) {
-            setUser({ token });
-        }
+        const fetchToken = async () => {
+            const token = await getCookie('token');
+            if (typeof token === 'string') {
+                setUser({ token });
+            }
+        };
+
+        fetchToken();
     }, []);
 
     return (

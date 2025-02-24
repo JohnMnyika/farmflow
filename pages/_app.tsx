@@ -1,8 +1,9 @@
-// pages/_app.js
+// pages/_app.tsx
 import '../styles/globals.css';
 import { AuthProvider } from '../context/AuthContext';
+import { AppProps } from 'next/app';
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: AppProps) {
     return (
         <AuthProvider>
             <Component {...pageProps} />

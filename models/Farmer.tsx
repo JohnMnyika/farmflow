@@ -15,7 +15,8 @@ const farmerSchema = new mongoose.Schema({
 // Hash password before saving
 farmerSchema.pre('save', async function (next) {
     if (this.isModified('password')) {
-        this.password = await bcrypt.hash(this.password, 10);
+        // Explicitly assert that `this.password` is a string
+        this.password = await bcrypt.hash(this.password as string, 10);
     }
     next();
 });

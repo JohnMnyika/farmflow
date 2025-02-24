@@ -1,23 +1,36 @@
 // pages/farmers/dashboard.tsx
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import ProtectedRoute from '../../components/ProtectedRoute';
+import ProtectedRoute from '../../../components/ProtectedRoute';
+
+interface ProduceItem {
+    _id: string;
+    name: string;
+    price: string;
+}
 
 export default function FarmerDashboard() {
-    const [produce, setProduce] = useState([]);
+    const [produce, setProduce] = useState<ProduceItem[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchProduce = async () => {
             try {
-                const response = await axios.get('/api/produce');
+                const response = await axios.get<ProduceItem[]>('/api/produce');
                 setProduce(response.data);
             } catch (error) {
-                console.error(error);
+                console.error('Failed to fetch produce:', error);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchProduce();
     }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <ProtectedRoute>

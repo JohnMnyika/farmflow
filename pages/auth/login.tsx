@@ -1,6 +1,6 @@
-// pages/auth/login.js
+// pages/auth/login.tsx
 import { useState } from 'react';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios'; // Import isAxiosError directly
 import { useRouter } from 'next/router';
 import * as yup from 'yup';
 
@@ -10,36 +10,45 @@ const loginSchema = yup.object().shape({
     password: yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
 });
 
+interface FormErrors {
+    phone?: string;
+    password?: string;
+}
+
 export default function Login() {
     const [formData, setFormData] = useState({
         phone: '',
         password: '',
     });
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState<FormErrors>({});
     const [apiError, setApiError] = useState('');
     const router = useRouter();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             // Validate form data
             await loginSchema.validate(formData, { abortEarly: false });
 
             // Submit form data
-            const response = await axios.post('/api/auth/login', formData);
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, formData);
             if (response.status === 200) {
                 router.push('/farmers/dashboard'); // Redirect to the farmer dashboard after login
             }
         } catch (error) {
-            if (error.name === 'ValidationError') {
+            if (error instanceof yup.ValidationError) {
                 // Set validation errors
-                const errors = {};
+                const validationErrors: FormErrors = {};
                 error.inner.forEach((err) => {
-                    errors[err.path] = err.message;
+                    validationErrors[err.path as keyof FormErrors] = err.message;
                 });
-                setErrors(errors);
-            } else {
+                setErrors(validationErrors);
+            } else if (isAxiosError(error)) {
+                // Handle Axios errors
                 setApiError(error.response?.data?.message || 'Something went wrong. Please try again.');
+            } else {
+                // Handle other errors
+                setApiError('Something went wrong. Please try again.');
             }
         }
     };

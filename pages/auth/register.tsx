@@ -1,6 +1,6 @@
 // pages/auth/register.tsx
 import { useState } from 'react';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios'; // Import isAxiosError directly
 import { useRouter } from 'next/router';
 import * as yup from 'yup';
 
@@ -39,15 +39,21 @@ export default function Register() {
                 router.push(response.data.redirect || '/farmers/dashboard'); // Redirect to the farmer dashboard
             }
         } catch (error) {
-            if (error.name === 'ValidationError') {
+            if (error instanceof yup.ValidationError) {
                 // Set validation errors
                 const errors: { [key: string]: string } = {};
                 error.inner.forEach((err) => {
-                    errors[err.path] = err.message;
+                    if (err.path) {
+                        errors[err.path] = err.message;
+                    }
                 });
                 setErrors(errors);
-            } else {
+            } else if (isAxiosError(error)) {
+                // Handle Axios errors
                 setApiError(error.response?.data?.message || 'Something went wrong. Please try again.');
+            } else {
+                // Handle other errors
+                setApiError('Something went wrong. Please try again.');
             }
         }
     };
